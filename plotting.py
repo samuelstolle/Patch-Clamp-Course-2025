@@ -1,4 +1,6 @@
-import matplotlib as plt
+import matplotlib.pyplot as plt
+import numpy as np
+
 from loading import load_patchmaster_file
 
 def plot_all_sweeps(directory, file_name):
