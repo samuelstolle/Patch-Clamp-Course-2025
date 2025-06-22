@@ -1,4 +1,4 @@
-# This script was copied from https://github.com/HallermannLab/heka_import_test and seems to be originally from https://github.com/campagnola/heka_reader
+# Adapted from https://github.com/campagnola/heka_reader
 
 """
 Heka Patchmaster .dat file reader 
