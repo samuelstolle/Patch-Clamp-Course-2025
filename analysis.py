@@ -5,7 +5,7 @@ from scipy.signal import find_peaks
 from loading import load_patchmaster_file
 
 def detect_spikes(time_ms, voltage_mv, threshold=0):
-    peaks, peak_properties = find_peaks(voltage_mv, height=threshold)
+    peaks, peak_properties = find_peaks(voltage_mv, height=threshold, prominence=1) #TODO calculate prominence threshold
     return time_ms[peaks], voltage_mv[peaks]
 
 def plot_all_sweeps(directory, file_name, show_plots=False, save_folder=None):
@@ -18,7 +18,6 @@ def plot_all_sweeps(directory, file_name, show_plots=False, save_folder=None):
         for series_index, series in enumerate(group):
             print(f"  Series {series_index + 1}")
             for sweep_index, sweep in enumerate(series):
-                print(f"    Sweep {sweep_index + 1}")
 
                 # get trace objects
                 trace0, trace1 = sweep[0], sweep[1]
@@ -58,9 +57,12 @@ def plot_all_sweeps(directory, file_name, show_plots=False, save_folder=None):
                 axs[1].set_ylabel("Voltage [mV]")
                 axs[1].set_xlabel("Time [ms]")
 
+
+
                 # detect and mark spikes
                 spike_times, spike_amplitudes = detect_spikes(plot_time, voltage_data_mv)
-                axs[1].plot(spike_times, spike_amplitudes, 'x', label='spikes')
+                print(f"    Sweep {sweep_index + 1}: {len(spike_times)} spikes")
+                axs[1].plot(spike_times, spike_amplitudes, 'x', label=f'spikes({len(spike_times)})')
                 axs[1].legend()
 
 
