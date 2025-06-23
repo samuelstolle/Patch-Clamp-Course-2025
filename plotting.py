@@ -1,10 +1,15 @@
+import os
 import matplotlib.pyplot as plt
 import numpy as np
 
 from loading import load_patchmaster_file
 
-def plot_all_sweeps(directory, file_name):
+def plot_all_sweeps(directory, file_name, show_plots=False, save_folder=None):
+    #TODO Adjust scaling, so the scaling is the same for all plots of a series
+
+    # load file the is to be plotted
     bundle = load_patchmaster_file(directory, file_name)
+
     for group_index, group in enumerate(bundle.pul):
         print(f"Group {group_index + 1}")
         for series_index, series in enumerate(group):
@@ -12,14 +17,20 @@ def plot_all_sweeps(directory, file_name):
             for sweep_index, sweep in enumerate(series):
                 print(f"    Sweep {sweep_index + 1}")
 
-                # get trace objects (metadata)
-                current_trace = sweep[0]  # first trace: current
-                voltage_trace = sweep[1]  # second trace: voltage
+                # get trace objects
+                trace0, trace1 = sweep[0], sweep[1]
 
-                # get trace data arrays
-                current_data = bundle.data[group_index, series_index, sweep_index, 0]  # actual current values
-                voltage_data = bundle.data[group_index, series_index, sweep_index, 1]  # actual voltage values
+                # get corresponding data
+                data0 = bundle.data[group_index, series_index, sweep_index, 0]
+                data1 = bundle.data[group_index, series_index, sweep_index, 1]
 
+                # decide which is current and which is voltage
+                if trace0.YUnit == "A":
+                    current_trace, current_data = trace0, data0
+                    voltage_trace, voltage_data = trace1, data1
+                else:
+                    current_trace, current_data = trace1, data1
+                    voltage_trace, voltage_data = trace0, data0
                 # define time dimension
                 start = voltage_trace.XStart
                 interval = voltage_trace.XInterval
@@ -37,13 +48,27 @@ def plot_all_sweeps(directory, file_name):
 
                 # plot current on top
                 axs[0].plot(plot_time, current_data_pa)  # time in ms
-                axs[0].set_ylabel(f"{current_trace.Label} [pA]")
+                axs[0].set_ylabel("Current [pA]")
 
                 # plot voltage on bottom
                 axs[1].plot(plot_time, voltage_data_mv)
-                axs[1].set_ylabel(f"{voltage_trace.Label} [mV]")
+                axs[1].set_ylabel("Voltage [mV]")
                 axs[1].set_xlabel("Time [ms]")
 
+                # fixed axis limits
+                axs[0].set_ylim(-100, 400)       # Current axis from 0 to 4 pA
+                axs[1].set_ylim(-100, 60)  # Voltage axis from -0.08 to 0.06 mV
+
                 # plt.tight_layout()
-                fig.suptitle(f"Group {group_index + 1}, Series {series_index + 1}, Sweep {sweep_index + 1}")
-                plt.show()
+                fig.suptitle(f"{file_name}\nGroup {group_index + 1}, Series {series_index + 1}, Sweep {sweep_index + 1}")
+
+                # save figure
+                os.makedirs(save_folder, exist_ok=True)
+                save_name = f"{file_name}_G{group_index+1}_S{series_index+1}_W{sweep_index+1}.png"
+                fig.savefig(os.path.join(save_folder, save_name))
+
+                # show or close the plot
+                if show_plots:
+                    plt.show()
+                else:
+                    plt.close(fig)
