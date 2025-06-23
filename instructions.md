@@ -16,6 +16,8 @@ Try to extract the following features for each action potential (AP):
   - frequency of the first five APs
 - optional: rheobase (i. e., the injected current at which the first AP occurs)
 
+![*Hallermann*, 2025](/sketch_Hallermann.png)
+
 ## Methodological Reference
 
 Here is the corresponding methods description in the mentioned paper:
