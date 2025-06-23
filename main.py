@@ -6,7 +6,7 @@ def main():
     file_name = "2025-06-18_1_cultured-cells.dat"
 
     load_patchmaster_file(directory, file_name)
-    plot_all_sweeps(directory, file_name, save_folder="plots")
+    plot_all_sweeps(directory, file_name, save_folder="plots", show_plots=True)
 
 if __name__ == '__main__':
     main()

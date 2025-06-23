@@ -1,11 +1,14 @@
 import os
 import matplotlib.pyplot as plt
 import numpy as np
-
+from scipy.signal import find_peaks
 from loading import load_patchmaster_file
 
+def detect_spikes(time_ms, voltage_mv, threshold=0):
+    peaks, peak_properties = find_peaks(voltage_mv, height=threshold)
+    return time_ms[peaks], voltage_mv[peaks]
+
 def plot_all_sweeps(directory, file_name, show_plots=False, save_folder=None):
-    #TODO Adjust scaling, so the scaling is the same for all plots of a series
 
     # load file the is to be plotted
     bundle = load_patchmaster_file(directory, file_name)
@@ -55,9 +58,15 @@ def plot_all_sweeps(directory, file_name, show_plots=False, save_folder=None):
                 axs[1].set_ylabel("Voltage [mV]")
                 axs[1].set_xlabel("Time [ms]")
 
+                # detect and mark spikes
+                spike_times, spike_amplitudes = detect_spikes(plot_time, voltage_data_mv)
+                axs[1].plot(spike_times, spike_amplitudes, 'x', label='spikes')
+                axs[1].legend()
+
+
                 # fixed axis limits
-                axs[0].set_ylim(-100, 400)       # Current axis from 0 to 4 pA
-                axs[1].set_ylim(-100, 60)  # Voltage axis from -0.08 to 0.06 mV
+                axs[0].set_ylim(-100, 400)
+                axs[1].set_ylim(-100, 60)
 
                 # plt.tight_layout()
                 fig.suptitle(f"{file_name}\nGroup {group_index + 1}, Series {series_index + 1}, Sweep {sweep_index + 1}")
