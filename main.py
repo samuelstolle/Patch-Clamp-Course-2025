@@ -1,5 +1,4 @@
-from plotting import plot_sweeps
-
+from src.plotting import plot_sweeps
 
 def main():
     directory = "raw_data" # Where are your .dat files stored?

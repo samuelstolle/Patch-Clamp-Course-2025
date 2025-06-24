@@ -1,5 +1,5 @@
 import os.path
-import heka_reader  
+import src.heka_reader
 
 def load_file(directory, file_name):
     """
@@ -19,4 +19,4 @@ def load_file(directory, file_name):
         A data bundle containing the loaded data, including raw traces, metadata, and protocol information.
     """
     path = os.path.join(directory, file_name)
-    return heka_reader.Bundle(path)
+    return src.heka_reader.Bundle(path)

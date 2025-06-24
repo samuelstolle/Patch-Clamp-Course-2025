@@ -1,7 +1,7 @@
 import os
 from matplotlib import pyplot as plt
-from analysis import detect_spikes, prepare_sweep
-from loading import load_file
+from src.analysis import detect_spikes, prepare_sweep
+from src.loading import load_file
 
 def plot_single_sweep(
         time_ms,
