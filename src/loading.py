@@ -8,7 +8,7 @@ def load_file(directory, file_name):
     Parameters
     ----------
     directory : str
-        Path to the directory, where the .dat file is stored
+        Path to the directory in which the .dat file is stored
 
     file_name : str
         Name of the .dat file that is to be analyzed
