@@ -27,7 +27,7 @@ def detect_spikes(time_points,
 
     """
 
-    peaks, peak_properties = find_peaks(voltage_values, height=threshold, prominence=1) #TODO calculate suitable prominence
+    peaks, peak_properties = find_peaks(voltage_values, prominence=25, distance=200) # prominence=25, distance=200 seems to work well with our data
     spike_times, spike_amplitudes = time_points[peaks], voltage_values[peaks]
     return spike_times, spike_amplitudes
 
